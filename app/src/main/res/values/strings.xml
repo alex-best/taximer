@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">TaxiAndroid</string>
+    <string name="error_location">Cant find curr location</string>
+</resources>
