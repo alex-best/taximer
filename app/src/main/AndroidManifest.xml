@@ -2,10 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ru.taximer.taxiandroid">
 
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
 
     <uses-feature
@@ -13,30 +13,41 @@
         android:required="true" />
 
     <application
+        android:name=".TaximerApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Taximer">
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCQ138o_KzshpvWWGkJE0uQaNLFEQdNEgQ"/>
-
-        <meta-data android:name="com.google.android.gms.version"
+            android:value="AIzaSyC4EA1UmcEoPR3gIT324F6RBJiGFgi_ImY" />
+        <meta-data
+            android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="186031b2e967f002758f618d04db0215abfd6c8c" />
 
         <activity
             android:name=".ui.MainActivity"
             android:theme="@style/Taximer.Home"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize"></activity>
+        <activity
+            android:name=".ui.MapsActivity"
+            android:label="@string/title_activity_maps" />
+        <activity android:name=".ui.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.MainTaxiScreen"
+            android:label="@string/title_activity_main_taxi_screen"
+            android:theme="@style/Taximer"></activity>
     </application>
 
 </manifest>

@@ -1,4 +1,21 @@
 <resources>
     <string name="app_name">TaxiAndroid</string>
     <string name="error_location">Cant find curr location</string>
+    <string name="label_ok">OK</string>
+
+    <string name="splash_description">Все такси в одном месте</string>
+
+    <!--====================================================================-->
+    <!-- Rationales -->
+
+    <string name="rationale_location_permission">Для определения положения, разрешите доступ к локации</string>
+    <string name="rationale_gps_is_off">Для определения положения, включите локацию</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_main_taxi_screen">MainTaxiScreen</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
 </resources>

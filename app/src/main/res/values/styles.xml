@@ -67,4 +67,8 @@
 
     <style name="BottomSheetDialogTheme" parent="BaseBottomSheetDialog" />
 
+    <style name="Taximer.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Taximer.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
 </resources>
