@@ -4,6 +4,10 @@
     <string name="label_ok">OK</string>
 
     <string name="splash_description">Все такси в одном месте</string>
+    <string name="label_notification">Уведомления</string>
+    <string name="label_share_app">Поделиться приложением</string>
+    <string name="label_mark_app">Оценить приложение</string>
+    <string name="label_feedback">Написать нам</string>
 
     <!--====================================================================-->
     <!-- Rationales -->

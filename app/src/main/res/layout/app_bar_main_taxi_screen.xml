@@ -6,20 +6,25 @@
     android:layout_height="match_parent"
     tools:context=".ui.MainTaxiScreen">
 
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="ru.taximer.taxiandroid.ui.fragments.MapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/Taximer.AppBarOverlay">
+        android:id="@+id/app_bar"
+        app:elevation="0dp"
+        android:background="@android:color/transparent">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/Taximer.PopupOverlay" />
-
+            android:fitsSystemWindows="true"
+            android:background="@android:color/transparent" />
     </android.support.design.widget.AppBarLayout>
-
-    <include layout="@layout/content_main_taxi_screen" />
 
 </android.support.design.widget.CoordinatorLayout>

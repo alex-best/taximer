@@ -22,10 +22,7 @@
         android:theme="@style/Taximer">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyC4EA1UmcEoPR3gIT324F6RBJiGFgi_ImY" />
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+            android:value="@string/google_maps_key" />
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="186031b2e967f002758f618d04db0215abfd6c8c" />
@@ -33,7 +30,7 @@
         <activity
             android:name=".ui.MainActivity"
             android:theme="@style/Taximer.Home"
-            android:windowSoftInputMode="adjustResize"></activity>
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".ui.MapsActivity"
             android:label="@string/title_activity_maps" />
@@ -46,8 +43,8 @@
         </activity>
         <activity
             android:name=".ui.MainTaxiScreen"
-            android:label="@string/title_activity_main_taxi_screen"
-            android:theme="@style/Taximer"></activity>
+            android:label=" "
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

@@ -1,8 +1,15 @@
 package ru.taximer.taxiandroid.ui
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.provider.Settings
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
+import com.arellomobile.mvp.MvpAppCompatActivity
+import com.arellomobile.mvp.presenter.InjectPresenter
+import com.arellomobile.mvp.presenter.PresenterType
+import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
@@ -10,11 +17,19 @@ import kotlinx.android.synthetic.main.activity_main.main_container
 import kotlinx.android.synthetic.main.activity_splash.root_container
 import ru.taximer.taxiandroid.Prefs
 import ru.taximer.taxiandroid.R
+import ru.taximer.taxiandroid.presenters.SplashPresenter
+import ru.taximer.taxiandroid.presenters.SplashView
 import ru.taximer.taxiandroid.utils.PERMISSIONS_LOCATION
 import ru.taximer.taxiandroid.utils.arePermissionsGranted
 import ru.taximer.taxiandroid.utils.shouldShowRationale
 
-class SplashActivity : AppCompatActivity() {
+class SplashActivity : MvpAppCompatActivity(), SplashView {
+
+    @InjectPresenter(type = PresenterType.LOCAL)
+    lateinit var presenter: SplashPresenter
+
+    @ProvidePresenter(type = PresenterType.LOCAL)
+    fun provideSplashPresenter(): SplashPresenter = SplashPresenter()
 
     private var locationProvider: FusedLocationProviderClient? = null
 
@@ -24,12 +39,13 @@ class SplashActivity : AppCompatActivity() {
         getCurrentLocation()
     }
 
+    @SuppressLint("HardwareIds")
     private fun getCurrentLocation() {
         checkMyLocationPermission {
             locationProvider = LocationServices.getFusedLocationProviderClient(this)
             locationProvider?.lastLocation?.addOnSuccessListener {
-                Prefs.storeGeo(LatLng(it.latitude, it.longitude))
-                MainTaxiScreen.launch(this)
+                Prefs.storeGeo(LatLng(it?.latitude ?: 0.0, it?.longitude ?: 0.0))
+                presenter.openApp(Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID))
             }
         }
     }
@@ -77,6 +93,25 @@ class SplashActivity : AppCompatActivity() {
             }
             else -> super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }
+    }
+
+    override fun hideLoading() {
+        //nope
+    }
+
+    override fun showLoading() {
+        //nope
+    }
+
+    override fun goToMainScreen() {
+        MainTaxiScreen.launch(this)
+    }
+
+    override fun showError(message: String) {
+        Log.d("Dto", message)
+        val snackbar = Snackbar.make(root_container, message, Snackbar.LENGTH_LONG)
+
+        snackbar.show()
     }
 
     companion object {

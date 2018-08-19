@@ -8,4 +8,6 @@
     <color name="background_light">#fafafa</color>
     <color name="immersive_bars">#99000000</color>
     <color name="light_grey">#fff5f5f5</color>
+
+    <color name="color_div">#d8d8d8</color>
 </resources>

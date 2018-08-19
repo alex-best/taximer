@@ -69,6 +69,10 @@
 
     <style name="Taximer.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="Taximer.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="Taximer.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" >
+        <item name="android:windowActionBarOverlay">true</item>
+        <!-- Support library compatibility -->
+        <item name="windowActionBarOverlay">true</item>
+    </style>
 
 </resources>
