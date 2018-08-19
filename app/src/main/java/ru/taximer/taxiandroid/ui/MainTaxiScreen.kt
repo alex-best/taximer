@@ -6,9 +6,11 @@ import android.os.Bundle
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
+import kotlinx.android.synthetic.main.activity_main_taxi_screen.appVersionView
 import kotlinx.android.synthetic.main.activity_main_taxi_screen.drawer_layout
 import kotlinx.android.synthetic.main.app_bar_main_taxi_screen.toolbar
 import org.jetbrains.anko.intentFor
+import ru.taximer.taxiandroid.BuildConfig
 import ru.taximer.taxiandroid.R
 
 class MainTaxiScreen : AppCompatActivity(){
@@ -22,6 +24,8 @@ class MainTaxiScreen : AppCompatActivity(){
                 this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
+
+        appVersionView.text = BuildConfig.VERSION_NAME
     }
 
     override fun onBackPressed() {
