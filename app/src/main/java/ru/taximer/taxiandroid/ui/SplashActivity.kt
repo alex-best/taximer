@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.provider.Settings
 import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
@@ -37,6 +36,7 @@ class SplashActivity : MvpAppCompatActivity(), SplashView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
         getCurrentLocation()
+        Prefs.clearSettings()
     }
 
     @SuppressLint("HardwareIds")
@@ -105,6 +105,7 @@ class SplashActivity : MvpAppCompatActivity(), SplashView {
 
     override fun goToMainScreen() {
         MainTaxiScreen.launch(this)
+        finish()
     }
 
     override fun showError(message: String) {

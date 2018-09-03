@@ -2,6 +2,7 @@ package ru.taximer.taxiandroid.ui
 
 import android.location.Address
 import android.text.TextUtils
+import android.util.Log
 import io.reactivex.ObservableEmitter
 import io.reactivex.ObservableOnSubscribe
 import org.json.JSONException
@@ -19,7 +20,7 @@ import java.util.Locale
 // Fallback Reverse Geocoder Observable
 ///////////////////////////////////////////////////////////////////////////
 
-private const val GOOGLE_API_KEY = "AIzaSyCLlvXDE1M7USpQkBff9V5l_kOgQq5HlUA"
+private const val GOOGLE_API_KEY = "AIzaSyCeNDOCcVI_BNy3SRCT9N13BLs3CWJejFk"
 
 class FallbackReverseGeocoderObservable(private val latitude: Double, private val longitude: Double) : ObservableOnSubscribe<List<Address>> {
 
@@ -65,6 +66,8 @@ class FallbackReverseGeocoderObservable(private val latitude: Double, private va
 
             // Root json response object
             val jsonRootObject = JSONObject(stringBuilder.toString())
+
+            Log.d("Dto", stringBuilder.toString())
 
             // No results status
             if ("ZERO_RESULTS".equals(jsonRootObject.getString("status"), true)) {

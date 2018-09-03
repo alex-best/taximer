@@ -31,9 +31,13 @@
             android:name=".ui.MainActivity"
             android:theme="@style/Taximer.Home"
             android:windowSoftInputMode="adjustResize"/>
-        <activity
-            android:name=".ui.MapsActivity"
-            android:label="@string/title_activity_maps" />
+        <activity android:name=".ui.TaxiActivity"
+            android:theme="@style/AppTheme"/>
+
+        <activity android:name=".ui.SettingsActivity"
+            android:label="Настройки"
+            android:theme="@style/AppTheme"/>
+
         <activity android:name=".ui.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -6,11 +6,30 @@
     android:layout_height="match_parent"
     tools:context=".ui.MainTaxiScreen">
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
     <fragment
         android:id="@+id/mapFragment"
         android:name="ru.taximer.taxiandroid.ui.fragments.MapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/goButton"
+            android:layout_width="match_parent"
+            android:layout_margin="16dp"
+            android:layout_gravity="bottom"
+            android:visibility="gone"
+            android:textColor="@android:color/white"
+            android:backgroundTint="#0077f6"
+            android:text="Поедем сюда"
+            android:minHeight="60dp"
+            android:textSize="18sp"
+            android:layout_height="wrap_content" />
+
+    </FrameLayout>
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -26,5 +45,7 @@
             android:fitsSystemWindows="true"
             android:background="@android:color/transparent" />
     </android.support.design.widget.AppBarLayout>
+
+    <include layout="@layout/bottom_sheet"/>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:orientation="vertical">
+
+    <ru.taximer.taxiandroid.ui.widget.SettingView
+        android:id="@+id/economy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="16dp"
+        android:background="@color/color_div" />
+
+    <ru.taximer.taxiandroid.ui.widget.SettingView
+        android:id="@+id/comfort"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="16dp"
+        android:background="@color/color_div" />
+
+    <ru.taximer.taxiandroid.ui.widget.SettingView
+        android:id="@+id/buisnes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="16dp"
+        android:background="@color/color_div" />
+
+    <ru.taximer.taxiandroid.ui.widget.SettingView
+        android:id="@+id/child"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="16dp"
+        android:background="@color/color_div" />
+
+    <ru.taximer.taxiandroid.ui.widget.SettingView
+        android:id="@+id/miniven"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#efeff4"
+        android:paddingBottom="16dp"
+        android:paddingLeft="16dp"
+        android:paddingTop="24dp"
+        android:text="Опции"
+        android:textColor="@android:color/black"
+        android:textSize="16sp" />
+
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/card"
+        android:layout_width="match_parent"
+        android:padding="16dp"
+        android:layout_height="60dp"
+        android:text="Оплата картой"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="16dp"
+        android:background="@color/color_div" />
+
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/cash"
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="Оплата наличными"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="16dp"
+        android:background="@color/color_div" />
+
+</android.support.v7.widget.LinearLayoutCompat>

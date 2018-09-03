@@ -31,10 +31,10 @@ class UserUsecasesImpl(
             )
                     .map {
                         if(it.success) {
-                            Prefs.storeToken(it.result.user.api_token ?: "")
+                            Prefs.storeToken(it.result?.user?.api_token ?: "")
                             Unit
                         }else{
-                            throw ResponseException(it.errors)
+                            throw ResponseException(it.errors[0])
                         }
                     }.applyDefaultNetSchedulers()
 }

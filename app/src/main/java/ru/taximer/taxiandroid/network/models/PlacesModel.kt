@@ -28,7 +28,7 @@ data class PlaceLocationModel(val latitude: Double, val longitude: Double, val a
             parcel.readDouble(),
             parcel.readString())
 
-    constructor(place: Place) : this(place.latLng.latitude, place.latLng.longitude, place.address.toString())
+    constructor(place: Place, address: String) : this(place.latLng.latitude, place.latLng.longitude, address)
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeDouble(latitude)

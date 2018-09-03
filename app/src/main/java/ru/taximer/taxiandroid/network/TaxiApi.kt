@@ -13,9 +13,10 @@ import retrofit2.http.POST
 import retrofit2.http.Query
 import ru.taximer.taxiandroid.network.models.AvailableTaxiResult
 import ru.taximer.taxiandroid.network.models.BaseResponseModel
-import ru.taximer.taxiandroid.network.models.SearchTaxiResult
+import ru.taximer.taxiandroid.network.models.ResultSearchTaxi
 import ru.taximer.taxiandroid.network.models.SupportMsg
 import ru.taximer.taxiandroid.network.models.TaxoparkResult
+import ru.taximer.taxiandroid.network.models.TaxoparkResultModel
 import ru.taximer.taxiandroid.network.models.UserResponse
 
 interface TaxiApi {
@@ -26,6 +27,31 @@ interface TaxiApi {
             @Field("device_hash") device_hash: String,
             @Field("device_type") device_type: String
     ): Flowable<BaseResponseModel<UserResponse>>
+
+    @GET("taxopark/get")
+    fun getTaxoparks(
+            @Query("source_points[lat]") lat: Double,
+            @Query("source_points[lng]") lng: Double,
+            @Query("destination_points[lng]") dest_lng: Double,
+            @Query("destination_points[lat]") dest_lat: Double,
+            @Query("address_from") address_from: String,
+            @Query("address_to") address_to: String,
+            @Query("has_child") has_child: Boolean? = null,
+            @Query("pay_cash") pay_cash: Boolean? = null,
+            @Query("pay_card") pay_card: Boolean? = null,
+            @Query("class_id") class_id: Int? = null
+    ): Flowable<BaseResponseModel<TaxoparkResultModel>>
+
+    @GET("search/request")
+    fun searchCurrentTaxi(
+            @Query("taxopark_id") taxopark_id: Long,
+            @Query("request_hash") request_hash: String
+    ): Flowable<BaseResponseModel<ResultSearchTaxi>>
+
+    @GET("search/best")
+    fun searchBesttTaxi(
+            @Query("request_hash") request_hash: String
+    ): Flowable<BaseResponseModel<ResultSearchTaxi>>
 
     @FormUrlEncoded
     @POST("app/open")
@@ -41,17 +67,19 @@ interface TaxiApi {
 
     @GET("taxopark/available")
     fun getAvailable(@Header("Authorization") authorization: String,
-                     @Query("latitude") latitude: Long, @Query("longitude") longitude: Long): Single<List<AvailableTaxiResult>>
+                     @Query("latitude") latitude: Long,
+                     @Query("longitude") longitude: Long
+    ): Single<List<AvailableTaxiResult>>
 
     @GET("taxopark/filter")
     fun getAvailableWithParams(@Header("Authorization") authorization: String,
-                               @Query("has_child") has_child: Boolean, @Query("pay_card_driver") pay_card_driver: Boolean,
-                               @Query("pay_cash") pay_cash: Boolean, @Query("pay_card") pay_card: Boolean,
-                               @Query("class_id") class_id: Int, @Query("volume_id") volume_id: Int,
-                               @Query("latitude") latitude: Long, @Query("longitude") longitude: Long): Observable<List<TaxoparkResult>>
-
-    @GET("search/request")
-    fun searchCurrentTaxi(@Query("taxopark_id") taxopark_id: Int, @Query("source_points[lat]") lat: Long, @Query("source_points[lng]") lng: Long,
-                          @Query("destination_points[lng]") dest_lng: Long, @Query("destination_points[lat]") dest_lat: Long,
-                          @Query("locality_id") locality_id: Int, @Query("pay_card") pay_card: Int, @Query("request_hash") request_hash: String): Observable<SearchTaxiResult>
+                               @Query("has_child") has_child: Boolean,
+                               @Query("pay_card_driver") pay_card_driver: Boolean,
+                               @Query("pay_cash") pay_cash: Boolean,
+                               @Query("pay_card") pay_card: Boolean,
+                               @Query("class_id") class_id: Int,
+                               @Query("volume_id") volume_id: Int,
+                               @Query("latitude") latitude: Long,
+                               @Query("longitude") longitude: Long
+    ): Observable<List<TaxoparkResult>>
 }

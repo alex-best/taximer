@@ -35,7 +35,7 @@ fun OkHttpClient.Builder.applyDefaultConfig(): OkHttpClient.Builder = apply {
         if (Prefs.getToken().isNotNullOrEmpty()) {
             val original = chain.request()
             val request = original.newBuilder()
-                    .header("Authorization", Prefs.getToken())
+                    .header("Authorization", "Bearer " + Prefs.getToken())
                     .method(original.method(), original.body())
                     .build()
             chain.proceed(request)
