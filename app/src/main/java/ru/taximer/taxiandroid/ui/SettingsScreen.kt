@@ -53,8 +53,8 @@ class SettingsActivity : MvpAppCompatActivity(), SettingsView, View.OnClickListe
         child.setOnClickListener(this)
         miniven.setOnClickListener(this)
 
-        card.setOnCheckedChangeListener { _, _ -> presenter.setCard() }
-        cash.setOnCheckedChangeListener { _, _ -> presenter.setCash() }
+        card.setOnCheckedChangeListener { _, value -> presenter.setCard(value) }
+        cash.setOnCheckedChangeListener { _, value -> presenter.setCash(value) }
 
     }
 

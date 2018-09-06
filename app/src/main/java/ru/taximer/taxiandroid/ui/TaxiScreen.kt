@@ -12,6 +12,8 @@ import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.PresenterType
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
+import com.ethanhua.skeleton.Skeleton
 import kotlinx.android.synthetic.main.activity_applications.applications
 import kotlinx.android.synthetic.main.activity_applications.endPlace
 import kotlinx.android.synthetic.main.activity_applications.root_container
@@ -26,12 +28,18 @@ import ru.taximer.taxiandroid.presenters.GetTaxiPresenter
 import ru.taximer.taxiandroid.presenters.GetTaxiView
 import ru.taximer.taxiandroid.presenters.TaxoparkPresenter
 import ru.taximer.taxiandroid.presenters.TaxoparkView
+import ru.taximer.taxiandroid.ui.adapters.OnTaxiHolderListener
 import ru.taximer.taxiandroid.ui.adapters.TaxiAdapter
 
 private const val START_PLACE = "start_place"
 private const val END_PLACE = "end_place"
 
-class TaxiActivity : MvpAppCompatActivity(), TaxoparkView, GetTaxiView, GetBestTaxiView {
+class TaxiActivity :
+        MvpAppCompatActivity(),
+        TaxoparkView,
+        GetTaxiView,
+        GetBestTaxiView,
+        OnTaxiHolderListener {
 
     @InjectPresenter(type = PresenterType.LOCAL)
     lateinit var presenter: TaxoparkPresenter
@@ -52,6 +60,7 @@ class TaxiActivity : MvpAppCompatActivity(), TaxoparkView, GetTaxiView, GetBestT
     fun provideGetBestPresenter(): GetBestTaxiPresenter = GetBestTaxiPresenter()
 
     private var mAdapter: TaxiAdapter? = null
+    private var skeletonScreen: RecyclerViewSkeletonScreen? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,7 +88,7 @@ class TaxiActivity : MvpAppCompatActivity(), TaxoparkView, GetTaxiView, GetBestT
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when(item?.itemId){
+        when (item?.itemId) {
             android.R.id.home -> {
                 onBackPressed()
                 return true
@@ -104,10 +113,13 @@ class TaxiActivity : MvpAppCompatActivity(), TaxoparkView, GetTaxiView, GetBestT
     }
 
     override fun addBestTaxi(taxi: SearchTaxiModel) {
-
+        //nope
     }
 
     override fun addTaxi(taxi: SearchTaxiModel) {
+        if (mAdapter?.itemCount == 0) {
+            skeletonScreen?.hide()
+        }
         mAdapter?.addItem(taxi)
     }
 
@@ -116,7 +128,11 @@ class TaxiActivity : MvpAppCompatActivity(), TaxoparkView, GetTaxiView, GetBestT
     }
 
     override fun showLoading() {
-        //nope
+        mAdapter?.clear()
+        skeletonScreen = Skeleton.bind(applications)
+                .adapter(mAdapter)
+                .load(R.layout.item_skeleton_taxi)
+                .show()
     }
 
     override fun showError(message: String) {
@@ -124,6 +140,12 @@ class TaxiActivity : MvpAppCompatActivity(), TaxoparkView, GetTaxiView, GetBestT
         val snackbar = Snackbar.make(root_container, message, Snackbar.LENGTH_LONG)
 
         snackbar.show()
+    }
+
+    override fun onAppSelect(url: String?) {
+        url ?: return
+      //  val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+     //   startActivity(browserIntent)
     }
 
     companion object {

@@ -12,8 +12,8 @@ import java.util.concurrent.TimeUnit
 // Timeout constants
 ///////////////////////////////////////////////////////////////////////////
 
-const val TIMEOUT_CONNECT = 120L
-const val TIMEOUT_READ = 120L
+const val TIMEOUT_CONNECT = 500L
+const val TIMEOUT_READ = 500L
 const val TIMEOUT_WRITE = 120L
 
 

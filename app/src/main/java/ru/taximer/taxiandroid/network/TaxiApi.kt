@@ -32,8 +32,8 @@ interface TaxiApi {
     fun getTaxoparks(
             @Query("source_points[lat]") lat: Double,
             @Query("source_points[lng]") lng: Double,
-            @Query("destination_points[lng]") dest_lng: Double,
-            @Query("destination_points[lat]") dest_lat: Double,
+            @Query("destination_points[lat]") dest_lng: Double,
+            @Query("destination_points[lng]") dest_lat: Double,
             @Query("address_from") address_from: String,
             @Query("address_to") address_to: String,
             @Query("has_child") has_child: Boolean? = null,

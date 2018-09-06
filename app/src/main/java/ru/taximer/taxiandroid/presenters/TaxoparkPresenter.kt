@@ -32,6 +32,7 @@ class TaxoparkPresenter : BaseRxPresenter<TaxoparkResultModel, TaxoparkView>() {
     val usecases: TaxiUsecases = TaximerApp.appComponent.baseUsecases()
 
     fun setPoints(start: PlaceLocationModel, end: PlaceLocationModel){
+        viewState.showLoading()
         val carType = if(Prefs.getCarClass() == -1) null else Prefs.getCarClass()
         val isChild = if(Prefs.isChild()) true else null
         val isCard = if(Prefs.isCard()) true else null

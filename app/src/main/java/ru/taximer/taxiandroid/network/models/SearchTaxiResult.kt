@@ -5,7 +5,7 @@ data class SearchTaxiModel(
         val request_hash: String = "",
         val status: String? = null,
         val taxopark_price: String? = null,
-        val order: Int? = null,
+        val order: Double? = null,
         val wait_time: Int? = null,
         val label: String? = null,
         val taxopark: TaxoparkModel,

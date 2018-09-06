@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "111176117002",
+    "firebase_url": "https://taxiandroid-95f66.firebaseio.com",
+    "project_id": "taxiandroid-95f66",
+    "storage_bucket": "taxiandroid-95f66.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:111176117002:android:aec097e6a43a6900",
+        "android_client_info": {
+          "package_name": "ru.taximer.taxiandroid"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "111176117002-nnrspqj9eovnece2e100ltflqt1ee0j5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ru.taximer.taxiandroid",
+            "certificate_hash": "87760c6cfdf5dcf1051b6728e1ffeb9a4f6d1e5c"
+          }
+        },
+        {
+          "client_id": "111176117002-h30psjav9nbl52vubjusmh0phsv1unng.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLMUX5exiiLEOadpTxnG635Ykpk37wTD0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "111176117002-h30psjav9nbl52vubjusmh0phsv1unng.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

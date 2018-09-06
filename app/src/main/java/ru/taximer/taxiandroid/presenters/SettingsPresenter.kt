@@ -59,12 +59,14 @@ class SettingsPresenter : MvpPresenter<SettingsView>() {
         updateState()
     }
 
-    fun setCard(){
+    fun setCard(value: Boolean){
+        if(value == Prefs.isCard()) return
         Prefs.setIsCard(!Prefs.isCard())
         updateState()
     }
 
-    fun setCash(){
+    fun setCash(value: Boolean){
+        if(value == Prefs.isCash()) return
         Prefs.setIsCash(!Prefs.isCash())
         updateState()
     }

@@ -35,15 +35,14 @@ import ru.taximer.taxiandroid.utils.gms.GoogleApiPartialActivityCallbacks
 import ru.taximer.taxiandroid.utils.gms.GoogleApiPartialCallbacks
 
 
-
 class MainTaxiScreen :
         MvpAppCompatActivity(),
         MainTaxiView,
         TextWatcher,
         GoogleApiPartialCallbacks,
         GoogleApiPartialActivityCallbacks,
-        OnPlaceListener
-{
+        OnPlaceListener,
+        View.OnFocusChangeListener {
 
     @InjectPresenter(type = PresenterType.GLOBAL)
     lateinit var presenter: MainTaxiPresenter
@@ -81,11 +80,19 @@ class MainTaxiScreen :
         goButton.setOnClickListener {
             presenter.onSearch()
         }
+        tmpBar.onFocusChangeListener = this
     }
 
     override fun onDestroy() {
         googleApiPartial.destroy()
         super.onDestroy()
+    }
+
+    override fun onFocusChange(p0: View?, value: Boolean) {
+        if(value){
+            val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        }
     }
 
     override fun afterTextChanged(p0: Editable?) {
