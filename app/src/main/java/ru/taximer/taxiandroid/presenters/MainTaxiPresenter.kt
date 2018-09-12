@@ -19,10 +19,10 @@ import ru.taximer.taxiandroid.utils.isNotNullOrEmpty
 // Main Taxi View
 ///////////////////////////////////////////////////////////////////////////
 
-interface MainTaxiView: MvpView{
+interface MainTaxiView : MvpView {
     fun setStart(location: PlaceLocationModel?)
     fun setEnd(location: PlaceLocationModel?)
-    fun setStep()
+    fun setState(isStartEdit: Boolean, isBothLocationContaints: Boolean)
     fun startSearch(start: PlaceLocationModel, end: PlaceLocationModel)
 }
 
@@ -32,11 +32,11 @@ interface MainTaxiView: MvpView{
 ///////////////////////////////////////////////////////////////////////////
 
 @InjectViewState
-class MainTaxiPresenter : MvpPresenter<MainTaxiView>(){
+class MainTaxiPresenter : MvpPresenter<MainTaxiView>() {
     private var startLocation: PlaceLocationModel? = null
     private var endLocation: PlaceLocationModel? = null
 
-    private var isStartEdit: Boolean = false
+    var isStartEdit: Boolean = false
     private var isEndEdit: Boolean = false
 
     private var addressDisposable: Disposable? = null
@@ -54,31 +54,39 @@ class MainTaxiPresenter : MvpPresenter<MainTaxiView>(){
         addressDisposable = null
     }
 
-    fun editStart(){
-        isEndEdit = false
-        isStartEdit = true
-        setEditState()
-    }
-
-    fun editEnd(){
-        isStartEdit = false
-        isEndEdit = true
-        setEditState()
-    }
-
-    private fun setEditState(){
-        viewState.setStep()
-        if(!isEndEdit && endLocation == null){
-            isStartEdit = true
+    fun getSearchLocation(): LatLng {
+        if (isStartEdit) {
+            return LatLng(endLocation?.latitude ?: 0.0, endLocation?.longitude ?: 0.0)
+        }
+        else {
+            return LatLng(startLocation?.latitude ?: 0.0, startLocation?.longitude ?: 0.0)
         }
     }
 
-    fun setLocation(location: PlaceLocationModel){
-        if(isStartEdit){
+    fun editStart() {
+        isEndEdit = false
+        isStartEdit = true
+    }
+
+    fun editEnd() {
+        isStartEdit = false
+        isEndEdit = true
+    }
+
+    private fun setEditState() {
+        if(!isEndEdit && endLocation == null){
+            editEnd()
+        }
+        viewState.setState(isStartEdit, startLocation != null && endLocation != null)
+    }
+
+    fun setLocation(location: PlaceLocationModel) {
+        if (isStartEdit) {
             startLocation = location
             viewState.setStart(startLocation)
             isStartEdit = false
-        }else{
+        }
+        else {
             endLocation = location
             viewState.setEnd(endLocation)
             isEndEdit = false
@@ -86,7 +94,7 @@ class MainTaxiPresenter : MvpPresenter<MainTaxiView>(){
         setEditState()
     }
 
-    fun onSearch(){
+    fun onSearch() {
         viewState?.startSearch(startLocation!!, endLocation!!)
     }
 
@@ -109,7 +117,7 @@ class MainTaxiPresenter : MvpPresenter<MainTaxiView>(){
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        { setLocation(it)},
+                        { setLocation(it) },
                         { detectFallbackReverseGeocode(coordinates) })
     }
 
@@ -134,11 +142,10 @@ class MainTaxiPresenter : MvpPresenter<MainTaxiView>(){
     private fun getPlaceLocationModel(addresses: List<Address>, coordinates: LatLng): PlaceLocationModel {
         val fullAddress = StringBuffer()
         if (addresses.isNotNullOrEmpty()) {
-            fullAddress.append((addresses[0].getAddressLine(0) ?: ""))
-            /*for (line in 0 until addresses[0].maxAddressLineIndex) {
-                fullAddress.append(addresses[0].getAddressLine(line) ?: "")
-                if (line != addresses[0].maxAddressLineIndex) fullAddress.append(", ")
-            }*/
+            fullAddress.append(addresses[0].thoroughfare)
+            if(addresses[0].featureName.isNotNullOrEmpty()){
+                fullAddress.append(", ").append(addresses[0].featureName)
+            }
         }
         return PlaceLocationModel(coordinates.latitude, coordinates.longitude, fullAddress.toString())
     }

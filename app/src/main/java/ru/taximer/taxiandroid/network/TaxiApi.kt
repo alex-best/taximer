@@ -1,10 +1,8 @@
 package ru.taximer.taxiandroid.network
 
 import io.reactivex.Flowable
-import io.reactivex.Observable
 import io.reactivex.Single
 import okhttp3.ResponseBody
-import retrofit2.http.Body
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
@@ -13,9 +11,8 @@ import retrofit2.http.POST
 import retrofit2.http.Query
 import ru.taximer.taxiandroid.network.models.AvailableTaxiResult
 import ru.taximer.taxiandroid.network.models.BaseResponseModel
+import ru.taximer.taxiandroid.network.models.HistoryResponseModel
 import ru.taximer.taxiandroid.network.models.ResultSearchTaxi
-import ru.taximer.taxiandroid.network.models.SupportMsg
-import ru.taximer.taxiandroid.network.models.TaxoparkResult
 import ru.taximer.taxiandroid.network.models.TaxoparkResultModel
 import ru.taximer.taxiandroid.network.models.UserResponse
 
@@ -27,6 +24,18 @@ interface TaxiApi {
             @Field("device_hash") device_hash: String,
             @Field("device_type") device_type: String
     ): Flowable<BaseResponseModel<UserResponse>>
+
+    @FormUrlEncoded
+    @POST("user/register-push")
+    fun sendPush(
+            @Field("token") token: String
+    ): Flowable<BaseResponseModel<Any?>>
+
+    @FormUrlEncoded
+    @POST("user/notification")
+    fun changeNotifications(
+            @Field("active") active: Boolean
+    ): Flowable<BaseResponseModel<Any?>>
 
     @GET("taxopark/get")
     fun getTaxoparks(
@@ -41,6 +50,12 @@ interface TaxiApi {
             @Query("pay_card") pay_card: Boolean? = null,
             @Query("class_id") class_id: Int? = null
     ): Flowable<BaseResponseModel<TaxoparkResultModel>>
+
+    @GET("user/adresses?lat=59.98597928342742&lng=30.320876240830824")
+    fun getHistory(
+            @Query("lat") lat: Double,
+            @Query("lng") lng: Double
+    ): Flowable<BaseResponseModel<HistoryResponseModel>>
 
     @GET("search/request")
     fun searchCurrentTaxi(
@@ -62,24 +77,16 @@ interface TaxiApi {
     fun installApp(@Field("device_hash") device_hash: String, @Field("device_type") device_type: String): ResponseBody
 
 
-    @POST("support/create")
-    fun askSupport(@Body msg: SupportMsg): ResponseBody
+    @FormUrlEncoded
+    @POST("user/support")
+    fun askSupport(
+            @Field("text") text: String,
+            @Field("email") email: String
+    ): Flowable<BaseResponseModel<Any?>>
 
     @GET("taxopark/available")
     fun getAvailable(@Header("Authorization") authorization: String,
                      @Query("latitude") latitude: Long,
                      @Query("longitude") longitude: Long
     ): Single<List<AvailableTaxiResult>>
-
-    @GET("taxopark/filter")
-    fun getAvailableWithParams(@Header("Authorization") authorization: String,
-                               @Query("has_child") has_child: Boolean,
-                               @Query("pay_card_driver") pay_card_driver: Boolean,
-                               @Query("pay_cash") pay_cash: Boolean,
-                               @Query("pay_card") pay_card: Boolean,
-                               @Query("class_id") class_id: Int,
-                               @Query("volume_id") volume_id: Int,
-                               @Query("latitude") latitude: Long,
-                               @Query("longitude") longitude: Long
-    ): Observable<List<TaxoparkResult>>
 }

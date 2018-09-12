@@ -2,9 +2,10 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     android:id="@+id/root_container"
+    android:layout_width="match_parent"
+    android:background="#ffffff"
+    android:layout_height="match_parent"
     tools:context=".ui.SplashActivity">
 
     <LinearLayout
@@ -13,23 +14,24 @@
         android:layout_gravity="center"
         android:gravity="center_horizontal"
         android:orientation="vertical">
-        <ImageView
+
+        <pl.droidsonroids.gif.GifTextView
             android:layout_width="wrap_content"
-            android:src="@mipmap/ic_launcher"
-            android:layout_marginBottom="48dp"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/app_icon_final" />
 
         <ImageView
             android:layout_width="wrap_content"
-            android:src="@drawable/ic_taximer_logo"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
-            android:layout_height="wrap_content" />
+            android:src="@drawable/ic_taximer_logo" />
 
         <TextView
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="@string/splash_description"
-            android:textSize="18sp"
-            android:layout_height="wrap_content" />
+            android:textSize="18sp" />
 
     </LinearLayout>
 

@@ -4,6 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.google.android.gms.location.places.AutocompletePrediction
 import com.google.android.gms.location.places.Place
+import com.google.android.gms.maps.model.LatLng
 
 
 ///////////////////////////////////////////////////////////////////////////
@@ -29,6 +30,8 @@ data class PlaceLocationModel(val latitude: Double, val longitude: Double, val a
             parcel.readString())
 
     constructor(place: Place, address: String) : this(place.latLng.latitude, place.latLng.longitude, address)
+
+    constructor(place: LatLng, address: String) : this(place.latitude, place.longitude, address)
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeDouble(latitude)
@@ -61,10 +64,11 @@ class PlacePredictionModel : Parcelable {
         }
     }
 
-    val placeId: String
+    var placeId: String? = null
     val address: String
     val locality: String
     val fullAddress: String
+    var location: LatLng? = null
 
     private constructor(parcelIn: Parcel) {
         placeId = parcelIn.readString()
@@ -85,6 +89,13 @@ class PlacePredictionModel : Parcelable {
         this.address = primaryText
         this.locality = secondaryText
         this.fullAddress = fullText
+    }
+
+    constructor(place: HistoryModel){
+        this.fullAddress = place.address?: ""
+        this.address = place.name?: ""
+        this.locality = ""
+        this.location = LatLng(place.coordinates.lat, place.coordinates.lng)
     }
 
     override fun writeToParcel(dest: Parcel, flags: Int) {

@@ -13,6 +13,8 @@ import ru.taximer.taxiandroid.network.models.ResponseException
 
 interface UserUsecases {
     fun openApp(device_hash: String): Flowable<Unit>
+    fun sendPush(token: String): Flowable<Unit>
+    fun setNotifications(value: Boolean): Flowable<Boolean>
 }
 
 
@@ -23,6 +25,12 @@ interface UserUsecases {
 class UserUsecasesImpl(
         private val endpoints: TaxiApi
 ) : UserUsecases {
+
+    override fun setNotifications(value: Boolean): Flowable<Boolean> =
+            endpoints.changeNotifications(value)
+                    .map {
+                        value
+                    }.applyDefaultNetSchedulers()
 
     override fun openApp(device_hash: String): Flowable<Unit> =
             endpoints.authUser(
@@ -37,4 +45,11 @@ class UserUsecasesImpl(
                             throw ResponseException(it.errors[0])
                         }
                     }.applyDefaultNetSchedulers()
+
+    override fun sendPush(token: String): Flowable<Unit> =
+            endpoints.sendPush(token)
+                    .map {
+                        Unit
+                    }
+                    .applyDefaultNetSchedulers()
 }

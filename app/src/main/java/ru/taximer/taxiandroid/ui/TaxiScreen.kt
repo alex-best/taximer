@@ -90,12 +90,10 @@ class TaxiActivity :
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             android.R.id.home -> {
-                onBackPressed()
-                return true
+                finish()
             }
             R.id.action_settings -> {
                 SettingsActivity.launch(this)
-                return true
             }
         }
         return super.onOptionsItemSelected(item)

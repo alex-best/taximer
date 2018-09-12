@@ -5,6 +5,7 @@ import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
 import android.support.design.widget.Snackbar
+import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,13 +31,20 @@ import ru.taximer.taxiandroid.R
 import ru.taximer.taxiandroid.network.models.PlaceLocationModel
 import ru.taximer.taxiandroid.presenters.MainTaxiPresenter
 import ru.taximer.taxiandroid.presenters.MainTaxiView
+import ru.taximer.taxiandroid.ui.MainTaxiScreen
 import ru.taximer.taxiandroid.utils.PERMISSIONS_LOCATION
 import ru.taximer.taxiandroid.utils.arePermissionsGranted
 import ru.taximer.taxiandroid.utils.shouldShowRationale
 import java.io.IOException
 import java.util.Locale
 
-class MapFragment : MvpAppCompatFragment(), OnMapReadyCallback, LocationListener, MainTaxiView, GoogleMap.OnMapClickListener {
+class MapFragment :
+        MvpAppCompatFragment(),
+        OnMapReadyCallback,
+        LocationListener,
+        MainTaxiView,
+        GoogleMap.OnMapClickListener,
+        GoogleMap.OnMarkerClickListener {
 
     @InjectPresenter(type = PresenterType.GLOBAL)
     lateinit var presenter: MainTaxiPresenter
@@ -77,6 +85,7 @@ class MapFragment : MvpAppCompatFragment(), OnMapReadyCallback, LocationListener
 
         map?.setOnMapClickListener(this)
 
+        presenter.editStart()
         presenter.detectAddress(Prefs.readGeo(), Geocoder(activity!!, Locale.getDefault()))
 
         checkMyLocationPermissionSilent {
@@ -85,11 +94,29 @@ class MapFragment : MvpAppCompatFragment(), OnMapReadyCallback, LocationListener
         getCurrentLocation()
 
         map?.moveCamera(CameraUpdateFactory.zoomTo(11f))
+        map?.setOnMarkerClickListener(this)
     }
 
     override fun onMapClick(p0: LatLng?) {
         p0 ?: return
         presenter.detectAddress(p0, Geocoder(activity!!, Locale.getDefault()))
+    }
+
+    override fun onMarkerClick(marker: Marker?): Boolean {
+        marker ?: return false
+        when(marker){
+            startMarker ->{
+                (activity as MainTaxiScreen).openStartSearch()
+                return true
+            }
+            endMarker ->{
+                (activity as MainTaxiScreen).openEndSearch()
+                return true
+            }
+            else ->{
+                return false
+            }
+        }
     }
 
     @SuppressLint("MissingPermission")
@@ -180,6 +207,8 @@ class MapFragment : MvpAppCompatFragment(), OnMapReadyCallback, LocationListener
                                 DEFAULT_ZOOM))
             }
             val icnGenerator = IconGenerator(activity!!)
+            icnGenerator.setBackground(ContextCompat.getDrawable(context!!,R.drawable.ic_marker_pickup ))
+            icnGenerator.setTextAppearance(R.style.iconGenText)
             val iconBitmap = icnGenerator.makeIcon(gps.address)
             startMarker = it.addMarker(MarkerOptions()
                     .position(LatLng(gps.latitude, gps.longitude))
@@ -188,19 +217,21 @@ class MapFragment : MvpAppCompatFragment(), OnMapReadyCallback, LocationListener
         }
     }
 
-    override fun setEnd(gps: PlaceLocationModel?) {
-        gps ?: return
+    override fun setEnd(location: PlaceLocationModel?) {
+        location ?: return
         map?.let {
             if (endMarker != null) endMarker?.remove()
             else {
                 it.animateCamera(
-                        CameraUpdateFactory.newLatLngZoom(LatLng(gps.latitude, gps.longitude),
+                        CameraUpdateFactory.newLatLngZoom(LatLng(location.latitude, location.longitude),
                                 DEFAULT_ZOOM))
             }
             val icnGenerator = IconGenerator(activity!!)
-            val iconBitmap = icnGenerator.makeIcon(gps.address)
+            icnGenerator.setBackground(ContextCompat.getDrawable(context!!,R.drawable.ic_marker_destination ))
+            icnGenerator.setTextAppearance(R.style.iconGenText)
+            val iconBitmap = icnGenerator.makeIcon(location.address)
             endMarker = it.addMarker(MarkerOptions()
-                    .position(LatLng(gps.latitude, gps.longitude))
+                    .position(LatLng(location.latitude, location.longitude))
                     .icon(BitmapDescriptorFactory.fromBitmap(iconBitmap)))
 
         }
@@ -210,7 +241,7 @@ class MapFragment : MvpAppCompatFragment(), OnMapReadyCallback, LocationListener
         drawStartMarker(location)
     }
 
-    override fun setStep() {
+    override fun setState(isStartEdit: Boolean, isBothLocationContaints: Boolean) {
         //nope
     }
 

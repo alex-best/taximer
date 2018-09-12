@@ -2,6 +2,7 @@ package ru.taximer.taxiandroid.ui
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.os.Handler
 import android.provider.Settings
 import android.support.design.widget.Snackbar
 import android.util.Log
@@ -104,8 +105,12 @@ class SplashActivity : MvpAppCompatActivity(), SplashView {
     }
 
     override fun goToMainScreen() {
-        MainTaxiScreen.launch(this)
-        finish()
+
+        val handler = Handler()
+        handler.postDelayed({
+            MainTaxiScreen.launch(this)
+            finish()
+        }, 450)
     }
 
     override fun showError(message: String) {

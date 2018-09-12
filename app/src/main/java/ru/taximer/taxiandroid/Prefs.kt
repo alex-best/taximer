@@ -8,6 +8,8 @@ object Prefs {
     private val GEO_LON = "geo_lon"
     private val TOKEN = "token"
 
+    private val NOTIFICATION = "notification"
+
     private val CAR_CLASS = "car_class"
     private val IS_CHILD = "is_child"
     private val CARD_PAY = "card_pay"
@@ -25,8 +27,11 @@ object Prefs {
     fun storeToken(token: String) = Hawk.put(TOKEN, token)
     fun getToken() = Hawk.get(TOKEN, "")!!
 
+    fun isNotification() = Hawk.get(NOTIFICATION, false)
+    fun setNotification(isNotification: Boolean) = Hawk.put(NOTIFICATION, isNotification)
+
     fun storeCarClass(car: Int) = Hawk.put(CAR_CLASS, car)
-    fun getCarClass() = Hawk.get(CAR_CLASS, -1)
+    fun getCarClass() = Hawk.get(CAR_CLASS, 1)
 
     fun setIsChild(value: Boolean) = Hawk.put(IS_CHILD, value)
     fun isChild() = Hawk.get(IS_CHILD, false)
@@ -38,7 +43,7 @@ object Prefs {
     fun isCash() = Hawk.get(CASH_PAY, false)
 
     fun clearSettings(){
-        storeCarClass(-1)
+        storeCarClass(1)
         setIsCash(false)
         setIsCard(false)
         setIsChild(false)

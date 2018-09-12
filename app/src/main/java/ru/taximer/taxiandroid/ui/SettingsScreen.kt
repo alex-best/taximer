@@ -61,8 +61,7 @@ class SettingsActivity : MvpAppCompatActivity(), SettingsView, View.OnClickListe
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId){
             android.R.id.home -> {
-                onBackPressed()
-                return true
+                finish()
             }
         }
         return super.onOptionsItemSelected(item)

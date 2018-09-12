@@ -75,4 +75,10 @@
         <item name="windowActionBarOverlay">true</item>
     </style>
 
+    <style name="iconGenText">
+        <item name="android:textSize">13sp</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textColor">#ffffff</item>
+    </style>
+
 </resources>

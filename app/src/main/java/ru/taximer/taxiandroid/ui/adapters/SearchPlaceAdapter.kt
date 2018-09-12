@@ -5,24 +5,28 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.google.android.gms.maps.model.LatLng
 import io.reactivex.disposables.Disposable
 import ru.taximer.taxiandroid.R
+import ru.taximer.taxiandroid.TaximerApp
 import ru.taximer.taxiandroid.network.models.PlaceLocationModel
 import ru.taximer.taxiandroid.network.models.PlacePredictionModel
 import ru.taximer.taxiandroid.network.models.emptyPrediction
+import ru.taximer.taxiandroid.network.usecases.TaxiUsecases
 import ru.taximer.taxiandroid.network.usecases.applyDefaultNetSchedulers
 import ru.taximer.taxiandroid.ui.MainTaxiScreen
 import ru.taximer.taxiandroid.utils.gms.GoogleApiPartial
 import ru.taximer.taxiandroid.utils.gms.getPlace
 import ru.taximer.taxiandroid.utils.gms.getPredictions
 
-interface OnPlaceHolderListener{
+interface OnPlaceHolderListener {
     fun onPlaceSelect(place: PlacePredictionModel)
 }
 
-interface OnPlaceListener{
+interface OnPlaceListener {
     fun onPlaceSelect(place: PlaceLocationModel)
 }
+
 class SearchPlaceAdapter(
         val googleApiPartial: GoogleApiPartial<MainTaxiScreen>,
         val listener: OnPlaceListener)
@@ -45,7 +49,13 @@ class SearchPlaceAdapter(
     override fun onPlaceSelect(place: PlacePredictionModel) {
         placeSubscription?.dispose()
 
-        placeSubscription = googleApiPartial.getPlace(place.placeId)
+        val placeId = place.placeId
+        if (placeId == null) {
+            listener.onPlaceSelect(PlaceLocationModel(place.location!!, place.address))
+            return
+        }
+
+        placeSubscription = googleApiPartial.getPlace(place.placeId!!)
                 ?.applyDefaultNetSchedulers()
                 ?.subscribe(
                         { listener.onPlaceSelect(PlaceLocationModel(it.get(0), place.address)) },
@@ -56,9 +66,13 @@ class SearchPlaceAdapter(
     }
 
     @Synchronized
-    fun getAutocomplete(constraint: String) {
+    fun getAutocomplete(constraint: String?, isStart: Boolean = false, point: LatLng? = null) {
+        if (constraint.isNullOrEmpty()) {
+            getHistoryPoints(isStart, point!!)
+            return
+        }
         if (query == constraint) return
-        query = constraint
+        query = constraint!!
         if (query == "") {
             data.clear()
             notifyDataSetChanged()
@@ -81,6 +95,22 @@ class SearchPlaceAdapter(
                         { notifyDataSetChanged() })
     }
 
+    val usecases: TaxiUsecases = TaximerApp.appComponent.baseUsecases()
+
+    private fun getHistoryPoints(isStart: Boolean, point: LatLng) {
+        usecases.getHistory(isStart, point)
+                .subscribe(
+                        { buffer ->
+                            data.clear()
+                            val res = buffer.map { PlacePredictionModel(it) }
+                            data.addAll(res)
+                        },
+                        {
+                            data.clear()
+                            it.printStackTrace()
+                        },
+                        { notifyDataSetChanged() })
+    }
 }
 
 class SearchPlaceViewHolder private constructor(root: View) : RecyclerView.ViewHolder(root) {

@@ -33,4 +33,8 @@
     <string name="label_settings_buisnes_description">Представительский класс</string>
     <string name="label_settings_miniven_title">Минивэн</string>
     <string name="label_settings_miniven_description">На 6–8 мест для больших компаний</string>
+
+    <string name="label_to">Куда поедем?</string>
+    <string name="label_from">Откуда поедем?</string>
+
 </resources>

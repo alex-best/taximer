@@ -27,10 +27,6 @@
             android:name="io.fabric.ApiKey"
             android:value="186031b2e967f002758f618d04db0215abfd6c8c" />
 
-        <activity
-            android:name=".ui.MainActivity"
-            android:theme="@style/Taximer.Home"
-            android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".ui.TaxiActivity"
             android:theme="@style/AppTheme"/>
 
@@ -49,6 +45,13 @@
             android:name=".ui.MainTaxiScreen"
             android:label=" "
             android:theme="@style/AppTheme.NoActionBar"/>
+
+        <service
+            android:name=".TaxiFirebaseInstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

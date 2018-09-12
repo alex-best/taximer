@@ -1,7 +1,9 @@
 package ru.taximer.taxiandroid.network.usecases
 
+import com.google.android.gms.maps.model.LatLng
 import io.reactivex.Flowable
 import ru.taximer.taxiandroid.network.TaxiApi
+import ru.taximer.taxiandroid.network.models.HistoryModel
 import ru.taximer.taxiandroid.network.models.PlaceLocationModel
 import ru.taximer.taxiandroid.network.models.ResponseException
 import ru.taximer.taxiandroid.network.models.SearchTaxiModel
@@ -22,6 +24,8 @@ interface TaxiUsecases {
             isCash: Boolean?): Flowable<TaxoparkResultModel>
     fun getTaxopark(id: Long, hash: String): Flowable<SearchTaxiModel>
     fun getBestTaxopark(hash: String): Flowable<SearchTaxiModel>
+
+    fun getHistory(isStart:Boolean, point: LatLng): Flowable<List<HistoryModel>>
 }
 
 
@@ -32,6 +36,18 @@ interface TaxiUsecases {
 class TaxiUsecasesImpl(
         private val endpoints: TaxiApi
 ) : TaxiUsecases {
+
+    override fun getHistory(isStart: Boolean, point: LatLng): Flowable<List<HistoryModel>> =
+            endpoints.getHistory(
+                    point.latitude,
+                    point.longitude
+            ).map {
+                if(it.success) {
+                    if(isStart) it.result!!.to else it.result!!.from
+                }else{
+                    throw ResponseException(it.errors[0])
+                }
+            }.applyDefaultNetSchedulers()
 
     override fun getTaxoparcks(
             start: PlaceLocationModel,
