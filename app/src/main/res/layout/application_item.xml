@@ -6,8 +6,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="80dp"
-    android:layout_marginBottom="16dp"
-    android:background="?selectableItemBackground">
+    android:layout_marginBottom="8dp"
+    android:layout_marginEnd="4dp"
+    android:layout_marginStart="4dp"
+    android:foreground="?selectableItemBackground">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -15,14 +17,19 @@
         android:gravity="center_vertical"
         android:padding="8dp">
 
-        <ImageView
+        <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/app_icon"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:scaleType="fitXY"
             android:src="@mipmap/ic_launcher"
+            app:riv_corner_radius="12dp"
+            app:riv_border_width="1dip"
+            app:riv_border_color="#333333"
+            app:riv_mutate_background="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <TextView
             android:id="@+id/app_name"
@@ -33,7 +40,7 @@
             android:gravity="center_vertical"
             android:lines="2"
             android:textColor="@android:color/black"
-            android:textSize="@dimen/bs_header_text"
+            android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/price"
             app:layout_constraintStart_toEndOf="@id/app_icon"
@@ -44,7 +51,9 @@
             android:id="@+id/price"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_margin="8dp"
+            android:layout_margin="4dp"
+            android:textStyle="bold"
+            android:textSize="16sp"
             android:gravity="end|center_vertical"
             android:textColor="@android:color/black"
             app:layout_constraintBottom_toBottomOf="parent"

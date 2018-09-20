@@ -8,6 +8,7 @@ import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Query
 import ru.taximer.taxiandroid.network.models.AvailableTaxiResult
 import ru.taximer.taxiandroid.network.models.BaseResponseModel
@@ -51,11 +52,23 @@ interface TaxiApi {
             @Query("class_id") class_id: Int? = null
     ): Flowable<BaseResponseModel<TaxoparkResultModel>>
 
-    @GET("user/adresses?lat=59.98597928342742&lng=30.320876240830824")
+    @GET("user/addresses")
     fun getHistory(
-            @Query("lat") lat: Double,
-            @Query("lng") lng: Double
+            @Query("lat") lat: String,
+            @Query("lng") lng: String
     ): Flowable<BaseResponseModel<HistoryResponseModel>>
+
+    @GET("postback/new-install/{request_hash}")
+    fun sendInstallEvent(
+            @Path("request_hash") request_hash: String,
+            @Query("taxopark_id") taxopark_id: String
+    ): Flowable<Any?>
+
+    @GET("postback/new-ride/{request_hash}")
+    fun sendOpenEvent(
+            @Path("request_hash") request_hash: String,
+            @Query("taxopark_id") taxopark_id: String
+    ): Flowable<Any?>
 
     @GET("search/request")
     fun searchCurrentTaxi(

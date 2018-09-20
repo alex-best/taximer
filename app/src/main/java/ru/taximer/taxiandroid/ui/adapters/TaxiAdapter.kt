@@ -5,14 +5,14 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
+import com.makeramen.roundedimageview.RoundedImageView
 import ru.taximer.taxiandroid.R
 import ru.taximer.taxiandroid.network.models.SearchTaxiModel
 import ru.taximer.taxiandroid.utils.displayImage
 
 interface OnTaxiHolderListener {
-    fun onAppSelect(url: String?)
+    fun onAppSelect(installUrl: String, openUrl: String, appId: String, taxoparkId: String)
 }
 
 class TaxiAdapter(
@@ -35,13 +35,13 @@ class TaxiAdapter(
         notifyItemInserted(i)
     }
 
-    fun clear(){
+    fun clear() {
         data.clear()
         notifyDataSetChanged()
     }
 
-    override fun onAppSelect(url: String?) {
-        callback.onAppSelect(url)
+    override fun onAppSelect(installUrl: String, openUrl: String, appId: String, taxoparkId: String) {
+        callback.onAppSelect(installUrl, openUrl, appId, taxoparkId)
     }
 
     override fun getItemCount() = data.size
@@ -54,7 +54,7 @@ class TaxiViewHolder private constructor(root: View) : RecyclerView.ViewHolder(r
                 TaxiViewHolder(inflater.inflate(R.layout.application_item, parent, false))
     }
 
-    var appIcon: ImageView = itemView.findViewById<View>(R.id.app_icon) as ImageView
+    var appIcon: RoundedImageView = itemView.findViewById<View>(R.id.app_icon) as RoundedImageView
     var appName: TextView = itemView.findViewById<View>(R.id.app_name) as TextView
     var appValue: TextView = itemView.findViewById(R.id.price) as TextView
 
@@ -62,7 +62,14 @@ class TaxiViewHolder private constructor(root: View) : RecyclerView.ViewHolder(r
     var listener: OnTaxiHolderListener? = null
 
     init {
-        root.setOnClickListener { listener?.onAppSelect(model?.install_link) }
+        root.setOnClickListener {
+            listener?.onAppSelect(
+                    model?.install_link ?: "",
+                    model?.application_link ?: "",
+                    model?.android_app_id ?: "",
+                    model?.taxopark?.id?.toString() ?: ""
+            )
+        }
     }
 
     fun bind(model: SearchTaxiModel, listener: OnTaxiHolderListener) {

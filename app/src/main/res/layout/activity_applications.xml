@@ -4,13 +4,34 @@
     android:id="@+id/root_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#f7f7f7"
+    android:background="#ffffff"
     android:orientation="vertical">
+
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        app:elevation="0dp">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@android:color/transparent"
+            android:fitsSystemWindows="true" />
+    </android.support.design.widget.AppBarLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/color_div" />
 
     <android.support.v7.widget.LinearLayoutCompat
         android:id="@+id/placesContainer"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="60dp"
         android:background="@android:color/white"
         android:orientation="horizontal">
 
@@ -25,7 +46,8 @@
             android:gravity="center_vertical"
             android:lines="2"
             android:padding="12dp"
-            android:textColor="@android:color/black" />
+            android:textColor="@android:color/black"
+            android:textSize="12sp" />
 
         <View
             android:layout_width="1dp"
@@ -45,14 +67,21 @@
             android:gravity="center_vertical"
             android:lines="2"
             android:padding="12dp"
-            android:textColor="@android:color/black" />
+            android:textColor="@android:color/black"
+            android:textSize="12sp" />
 
     </android.support.v7.widget.LinearLayoutCompat>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/applications"
-        android:padding="8dp"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:background="#f7f7f7">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/applications"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="8dp" />
+    </FrameLayout>
 
 </LinearLayout>

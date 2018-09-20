@@ -26,6 +26,9 @@ interface TaxiUsecases {
     fun getBestTaxopark(hash: String): Flowable<SearchTaxiModel>
 
     fun getHistory(isStart:Boolean, point: LatLng): Flowable<List<HistoryModel>>
+
+    fun sendInstallEvent(hash: String, pxoparkId: String)
+    fun sendOpenEvent(hash: String, pxoparkId: String)
 }
 
 
@@ -39,8 +42,8 @@ class TaxiUsecasesImpl(
 
     override fun getHistory(isStart: Boolean, point: LatLng): Flowable<List<HistoryModel>> =
             endpoints.getHistory(
-                    point.latitude,
-                    point.longitude
+                    point.latitude.toString(),
+                    point.longitude.toString()
             ).map {
                 if(it.success) {
                     if(isStart) it.result!!.to else it.result!!.from
@@ -102,4 +105,12 @@ class TaxiUsecasesImpl(
                     throw ResponseException(it.errors[0])
                 }
             }.applyDefaultNetSchedulers()
+
+    override fun sendInstallEvent(hash: String, pxoparkId: String) {
+        endpoints.sendInstallEvent(hash, pxoparkId).applyDefaultNetSchedulers().subscribe()
+    }
+
+    override fun sendOpenEvent(hash: String, pxoparkId: String) {
+        endpoints.sendOpenEvent(hash, pxoparkId).applyDefaultNetSchedulers().subscribe()
+    }
 }

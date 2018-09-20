@@ -11,7 +11,6 @@ import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.PresenterType
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import kotlinx.android.synthetic.main.activity_applications.root_container
 import kotlinx.android.synthetic.main.activity_settings.buisnes
 import kotlinx.android.synthetic.main.activity_settings.card
 import kotlinx.android.synthetic.main.activity_settings.cash
@@ -19,6 +18,8 @@ import kotlinx.android.synthetic.main.activity_settings.child
 import kotlinx.android.synthetic.main.activity_settings.comfort
 import kotlinx.android.synthetic.main.activity_settings.economy
 import kotlinx.android.synthetic.main.activity_settings.miniven
+import kotlinx.android.synthetic.main.activity_settings.root_container
+import kotlinx.android.synthetic.main.activity_settings.toolbar
 import org.jetbrains.anko.intentFor
 import ru.taximer.taxiandroid.R
 import ru.taximer.taxiandroid.presenters.SettingsPresenter
@@ -37,6 +38,7 @@ class SettingsActivity : MvpAppCompatActivity(), SettingsView, View.OnClickListe
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
         initUI()
+        setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 

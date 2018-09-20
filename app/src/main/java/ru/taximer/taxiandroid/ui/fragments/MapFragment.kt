@@ -14,7 +14,10 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.PresenterType
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationListener
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -22,10 +25,12 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.maps.android.ui.IconGenerator
 import kotlinx.android.synthetic.main.activity_main.main_container
+import kotlinx.android.synthetic.main.fragment_map.locationView
 import ru.taximer.taxiandroid.Prefs
 import ru.taximer.taxiandroid.R
 import ru.taximer.taxiandroid.network.models.PlaceLocationModel
@@ -55,16 +60,25 @@ class MapFragment :
     private var map: GoogleMap? = null
     var startMarker: Marker? = null
     var endMarker: Marker? = null
+    var currentPoisitionMarker: Marker? = null
 
     private var locationProvider: FusedLocationProviderClient? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View = inflater.inflate(R.layout.fragment_map, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
+            inflater.inflate(R.layout.fragment_map, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val mapFragment = childFragmentManager
                 .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+        locationView.setOnClickListener {
+            currentPoisitionMarker?.let { marker ->
+                map?.animateCamera(
+                        CameraUpdateFactory.newLatLngZoom(marker.position,
+                                16F))
+            }
+        }
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -104,17 +118,21 @@ class MapFragment :
 
     override fun onMarkerClick(marker: Marker?): Boolean {
         marker ?: return false
-        when(marker){
-            startMarker ->{
+        return when (marker) {
+            startMarker -> {
                 (activity as MainTaxiScreen).openStartSearch()
-                return true
+                true
             }
-            endMarker ->{
+            endMarker -> {
                 (activity as MainTaxiScreen).openEndSearch()
-                return true
+                true
             }
-            else ->{
-                return false
+            currentPoisitionMarker -> {
+                presenter.detectAddress(currentPoisitionMarker!!.position, Geocoder(activity!!, Locale.getDefault()))
+                true
+            }
+            else -> {
+                false
             }
         }
     }
@@ -132,6 +150,19 @@ class MapFragment :
                 locationProvider?.lastLocation?.addOnSuccessListener {
                     onLocationChanged(it)
                 }
+                locationProvider?.requestLocationUpdates(
+                        LocationRequest.create().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                                .setInterval(200L),
+                        object : LocationCallback() {
+                            override fun onLocationResult(locationResult: LocationResult?) {
+                                locationResult ?: return
+                                val position = locationResult.locations.firstOrNull()
+                                position ?: return
+                                onLocationChanged(position)
+                                super.onLocationResult(locationResult)
+                            }
+                        },
+                        null)
             }
         }
     }
@@ -192,27 +223,39 @@ class MapFragment :
 
     override fun onLocationChanged(location: Location?) {
         location ?: return
-        presenter.editStart()
-        presenter.detectAddress(LatLng(location.latitude, location.longitude), Geocoder(activity!!, Locale.getDefault()))
+
+        map?.let {
+            if (currentPoisitionMarker != null) {
+                currentPoisitionMarker!!.position = LatLng(location.latitude, location.longitude)
+            }
+            else {
+                currentPoisitionMarker = it.addMarker(MarkerOptions()
+                        .position(LatLng(location.latitude, location.longitude))
+                        .icon(BitmapDescriptorFactory.fromResource(R.mipmap.location_marker)))
+            }
+        }
+
+        presenter.editStartFirst(
+                LatLng(location.latitude, location.longitude),
+                Geocoder(activity!!, Locale.getDefault()
+                )
+        )
     }
+
 
     @Throws(IOException::class)
     private fun drawStartMarker(gps: PlaceLocationModel?) {
         gps ?: return
         map?.let {
             if (startMarker != null) startMarker?.remove()
-            else {
-                it.animateCamera(
-                        CameraUpdateFactory.newLatLngZoom(LatLng(gps.latitude, gps.longitude),
-                                DEFAULT_ZOOM))
-            }
             val icnGenerator = IconGenerator(activity!!)
-            icnGenerator.setBackground(ContextCompat.getDrawable(context!!,R.drawable.ic_marker_pickup ))
+            icnGenerator.setBackground(ContextCompat.getDrawable(context!!, R.drawable.ic_marker_pickup))
             icnGenerator.setTextAppearance(R.style.iconGenText)
             val iconBitmap = icnGenerator.makeIcon(gps.address)
             startMarker = it.addMarker(MarkerOptions()
                     .position(LatLng(gps.latitude, gps.longitude))
                     .icon(BitmapDescriptorFactory.fromBitmap(iconBitmap)))
+            positionOnMap()
 
         }
     }
@@ -221,18 +264,15 @@ class MapFragment :
         location ?: return
         map?.let {
             if (endMarker != null) endMarker?.remove()
-            else {
-                it.animateCamera(
-                        CameraUpdateFactory.newLatLngZoom(LatLng(location.latitude, location.longitude),
-                                DEFAULT_ZOOM))
-            }
+
             val icnGenerator = IconGenerator(activity!!)
-            icnGenerator.setBackground(ContextCompat.getDrawable(context!!,R.drawable.ic_marker_destination ))
+            icnGenerator.setBackground(ContextCompat.getDrawable(context!!, R.drawable.ic_marker_destination))
             icnGenerator.setTextAppearance(R.style.iconGenText)
             val iconBitmap = icnGenerator.makeIcon(location.address)
             endMarker = it.addMarker(MarkerOptions()
                     .position(LatLng(location.latitude, location.longitude))
                     .icon(BitmapDescriptorFactory.fromBitmap(iconBitmap)))
+            positionOnMap()
 
         }
     }
@@ -247,6 +287,23 @@ class MapFragment :
 
     override fun startSearch(start: PlaceLocationModel, end: PlaceLocationModel) {
         //nope
+    }
+
+    private fun positionOnMap() {
+        startMarker ?: return
+
+        if (endMarker != null) {
+            val builder = LatLngBounds.Builder()
+            builder.include(startMarker!!.position)
+            builder.include(endMarker!!.position)
+            val bounds = builder.build()
+            map?.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200))
+        }
+        else {
+            map?.animateCamera(
+                    CameraUpdateFactory.newLatLngZoom(startMarker!!.position,
+                            DEFAULT_ZOOM))
+        }
     }
 
     companion object {

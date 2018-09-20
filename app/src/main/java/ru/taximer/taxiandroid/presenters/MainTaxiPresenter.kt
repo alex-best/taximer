@@ -55,11 +55,11 @@ class MainTaxiPresenter : MvpPresenter<MainTaxiView>() {
     }
 
     fun getSearchLocation(): LatLng {
-        if (isStartEdit) {
-            return LatLng(endLocation?.latitude ?: 0.0, endLocation?.longitude ?: 0.0)
+        return if (isStartEdit) {
+            LatLng(endLocation?.latitude ?: 0.0, endLocation?.longitude ?: 0.0)
         }
         else {
-            return LatLng(startLocation?.latitude ?: 0.0, startLocation?.longitude ?: 0.0)
+            LatLng(startLocation?.latitude ?: 0.0, startLocation?.longitude ?: 0.0)
         }
     }
 
@@ -68,28 +68,34 @@ class MainTaxiPresenter : MvpPresenter<MainTaxiView>() {
         isStartEdit = true
     }
 
+    fun editStartFirst(coordinates: LatLng, geocoder: Geocoder){
+        if(startLocation == null){
+            editStart()
+            detectAddress(coordinates, geocoder)
+        }
+    }
+
     fun editEnd() {
         isStartEdit = false
         isEndEdit = true
     }
 
     private fun setEditState() {
-        if(!isEndEdit && endLocation == null){
-            editEnd()
-        }
         viewState.setState(isStartEdit, startLocation != null && endLocation != null)
     }
+
+    fun isBothLocationSelected() = startLocation != null && endLocation != null
 
     fun setLocation(location: PlaceLocationModel) {
         if (isStartEdit) {
             startLocation = location
             viewState.setStart(startLocation)
             isStartEdit = false
+            isEndEdit = true
         }
         else {
             endLocation = location
             viewState.setEnd(endLocation)
-            isEndEdit = false
         }
         setEditState()
     }
@@ -107,6 +113,7 @@ class MainTaxiPresenter : MvpPresenter<MainTaxiView>() {
         setLocation(place)
     }
 
+    @Synchronized
     fun detectAddress(coordinates: LatLng, geocoder: Geocoder) {
         addressDisposable?.dispose()
 

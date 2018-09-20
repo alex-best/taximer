@@ -220,13 +220,13 @@ fun CompoundButton.setCheckedSilently(isChecked: Boolean, listener: CompoundButt
     setOnCheckedChangeListener(listener)
 }
 
-fun ViewGroup.inflate(layoutId: Int, attachToRoot: Boolean = false) : View {
+fun ViewGroup.inflate(layoutId: Int, attachToRoot: Boolean = false): View {
     return LayoutInflater.from(context).inflate(layoutId, this, attachToRoot)
 }
 
-inline fun <reified  T : Parcelable> createParcel(): Parcelable.Creator<T> =
+inline fun <reified T : Parcelable> createParcel(): Parcelable.Creator<T> =
         object : Parcelable.Creator<T> {
-            override fun createFromParcel(source : Parcel) : T? = createFromParcel(source)
-            override fun newArray(size: Int) : Array<out T?> = arrayOfNulls(size)
+            override fun createFromParcel(source: Parcel): T? = createFromParcel(source)
+            override fun newArray(size: Int): Array<out T?> = arrayOfNulls(size)
         }
 

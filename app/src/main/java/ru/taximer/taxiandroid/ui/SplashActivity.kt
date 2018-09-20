@@ -14,7 +14,9 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.android.synthetic.main.activity_main.main_container
+import kotlinx.android.synthetic.main.activity_splash.gifImage
 import kotlinx.android.synthetic.main.activity_splash.root_container
+import pl.droidsonroids.gif.GifDrawable
 import ru.taximer.taxiandroid.Prefs
 import ru.taximer.taxiandroid.R
 import ru.taximer.taxiandroid.presenters.SplashPresenter
@@ -31,11 +33,17 @@ class SplashActivity : MvpAppCompatActivity(), SplashView {
     @ProvidePresenter(type = PresenterType.LOCAL)
     fun provideSplashPresenter(): SplashPresenter = SplashPresenter()
 
+    var duration: Long = 0L
+
     private var locationProvider: FusedLocationProviderClient? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
+        val drawable = GifDrawable.createFromResource(resources, R.drawable.app_icon_final)
+        duration = drawable?.duration?.toLong() ?: 0L
+        gifImage.setImageDrawable(drawable)
+        drawable?.start()
         getCurrentLocation()
         Prefs.clearSettings()
     }
@@ -110,7 +118,7 @@ class SplashActivity : MvpAppCompatActivity(), SplashView {
         handler.postDelayed({
             MainTaxiScreen.launch(this)
             finish()
-        }, 450)
+        }, duration)
     }
 
     override fun showError(message: String) {

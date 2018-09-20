@@ -3,7 +3,6 @@ package ru.taximer.taxiandroid.utils
 import android.content.Context
 import android.os.Build
 import android.support.v4.view.ViewConfigurationCompat
-import android.util.Log
 import android.view.KeyCharacterMap
 import android.view.KeyEvent
 import android.view.View
@@ -85,8 +84,8 @@ fun showKeyboard(context: Context, view: View) {
 fun hideKeyboard(context: Context, view: View) {
     val windowToken = view.windowToken
     val appContext = context.applicationContext
-    view.post({
+    view.post{
         view.clearFocus()
         appContext.inputMethodManager.hideSoftInputFromWindow(windowToken, 0)
-    })
+    }
 }

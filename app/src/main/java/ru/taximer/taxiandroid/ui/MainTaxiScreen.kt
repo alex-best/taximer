@@ -2,8 +2,10 @@ package ru.taximer.taxiandroid.ui
 
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.BottomSheetBehavior
+import android.support.v4.content.ContextCompat
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.widget.LinearLayoutManager
@@ -18,11 +20,14 @@ import com.google.android.gms.location.places.Places
 import kotlinx.android.synthetic.main.activity_main_taxi_screen.appVersionView
 import kotlinx.android.synthetic.main.activity_main_taxi_screen.drawer_layout
 import kotlinx.android.synthetic.main.activity_main_taxi_screen.feedback
+import kotlinx.android.synthetic.main.activity_main_taxi_screen.markAppView
 import kotlinx.android.synthetic.main.activity_main_taxi_screen.notificationSwitch
+import kotlinx.android.synthetic.main.activity_main_taxi_screen.shareAppView
 import kotlinx.android.synthetic.main.app_bar_main_taxi_screen.goButton
 import kotlinx.android.synthetic.main.app_bar_main_taxi_screen.toolbar
 import kotlinx.android.synthetic.main.bottom_sheet.autocompleteAddresses
 import kotlinx.android.synthetic.main.bottom_sheet.bottomSheet
+import kotlinx.android.synthetic.main.bottom_sheet.coloredContainer
 import kotlinx.android.synthetic.main.bottom_sheet.tmpBar
 import org.jetbrains.anko.intentFor
 import ru.taximer.taxiandroid.BuildConfig
@@ -48,7 +53,7 @@ class MainTaxiScreen :
         GoogleApiPartialActivityCallbacks,
         OnPlaceListener,
         BaseLoadingView,
-        View.OnFocusChangeListener {
+        View.OnFocusChangeListener{
 
     @InjectPresenter(type = PresenterType.GLOBAL)
     lateinit var presenter: MainTaxiPresenter
@@ -110,6 +115,23 @@ class MainTaxiScreen :
         notificationSwitch.setOnCheckedChangeListener { _, value ->
             userSettingsPresenter.changeNotifications(value)
         }
+        shareAppView.setOnClickListener {
+            val sendIntent: Intent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, "https://play.google.com/store/apps/details?id=ru.taximer.taxiandroid")
+                type = "text/plain"
+            }
+            startActivity(sendIntent)
+        }
+
+        markAppView.setOnClickListener {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=ru.taximer.taxiandroid")))
+        }
+
+        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+
+        bottomSheetBehavior.setBottomSheetCallback(BottomCallbck())
+        setFeedBack()
     }
 
     override fun onDestroy() {
@@ -158,9 +180,27 @@ class MainTaxiScreen :
         }
     }
 
+    fun hidePanel(isBothLocationContaints: Boolean) {
+        tmpBar.setText("")
+        tmpBar.hideKeyboard()
+
+        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+        if (isBothLocationContaints) {
+            bottomSheetBehavior.isHideable = true
+            goButton.visibility = View.VISIBLE
+
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        }
+        else {
+            bottomSheetBehavior.isHideable = false
+            goButton.visibility = View.INVISIBLE
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+    }
+
     override fun onPlaceSelect(place: PlaceLocationModel) {
         presenter.setLocation(place)
-        tmpBar.hideKeyboard()
+        hidePanel(presenter.isBothLocationSelected())
     }
 
     override fun onBackPressed() = when {
@@ -170,7 +210,7 @@ class MainTaxiScreen :
             val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
             when {
                 bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED ->
-                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                    hidePanel(presenter.isBothLocationSelected())
                 else -> super.onBackPressed()
             }
         }
@@ -189,17 +229,7 @@ class MainTaxiScreen :
     }
 
     override fun setState(isStartEdit: Boolean, isBothLocationContaints: Boolean) {
-        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
-        if (isBothLocationContaints) {
-            bottomSheetBehavior.isHideable = true
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-            goButton.visibility = View.VISIBLE
-        }
-        else {
-            bottomSheetBehavior.isHideable = false
-            goButton.visibility = View.INVISIBLE
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-        }
+        hidePanel(presenter.isBothLocationSelected())
 
         if (isStartEdit) {
             tmpBar.setHint(R.string.label_from)
@@ -225,7 +255,7 @@ class MainTaxiScreen :
         //nope
     }
 
-    private fun setFeedBack(){
+    private fun setFeedBack() {
         feedback.setOnClickListener {
 
         }
@@ -240,5 +270,29 @@ class MainTaxiScreen :
             }
             context.startActivity(intent)
         }
+    }
+
+    inner class BottomCallbck : BottomSheetBehavior.BottomSheetCallback(){
+        override fun onStateChanged(bottomSheet: View, newState: Int) {
+            when(newState){
+                BottomSheetBehavior.STATE_EXPANDED ->{
+                    val color = ContextCompat.getColor(
+                            applicationContext,
+                            if (presenter.isStartEdit) R.color.pink else R.color.colorAccent
+                    )
+                    coloredContainer.setBackgroundColor(color)
+                }
+                BottomSheetBehavior.STATE_COLLAPSED ->{
+                    coloredContainer.setBackgroundColor(
+                            ContextCompat.getColor(applicationContext,
+                                    android.R.color.white)
+                    )
+                }
+            }
+        }
+
+        override fun onSlide(bottomSheet: View, slideOffset: Float) {
+            //nope
+       }
     }
 }

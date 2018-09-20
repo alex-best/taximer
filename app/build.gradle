@@ -9,10 +9,10 @@ android {
     buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "ru.taximer.taxiandroid"
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 27
-        versionCode 7
-        versionName "1.6"
+        versionCode 10
+        versionName "1.10"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -27,7 +27,6 @@ android {
         enabled = true
     }
 }
-
 
 buildscript {
     ext.retrofit_ver = '2.3.0'
@@ -50,7 +49,7 @@ dependencies {
 
     //testing
     implementation 'com.google.firebase:firebase-core:16.0.3'
-    implementation 'com.google.firebase:firebase-messaging:11.8.0'
+    implementation 'com.google.firebase:firebase-messaging:17.3.1'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
@@ -97,6 +96,7 @@ dependencies {
     kapt 'com.github.bumptech.glide:compiler:4.7.1'
     implementation "jp.wasabeef:glide-transformations:2.0.2"
     implementation "com.github.bumptech.glide:okhttp3-integration:1.4.0@aar"
+    compile 'com.makeramen:roundedimageview:2.3.0'
 
     implementation 'com.ethanhua:skeleton:1.1.1'
     implementation 'io.supercharge:shimmerlayout:2.1.0'

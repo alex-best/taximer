@@ -1,100 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root_container"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#FFFFFF">
 
-    <android.support.v7.widget.LinearLayoutCompat
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:background="@android:color/transparent"
+        app:elevation="0dp">
 
-        <ru.taximer.taxiandroid.ui.widget.SettingView
-            android:id="@+id/economy"
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="?attr/actionBarSize"
+            android:background="@android:color/transparent"
+            android:fitsSystemWindows="true" />
+    </android.support.design.widget.AppBarLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginStart="16dp"
-            android:background="@color/color_div" />
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <ru.taximer.taxiandroid.ui.widget.SettingView
-            android:id="@+id/comfort"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginStart="16dp"
-            android:background="@color/color_div" />
-
-        <ru.taximer.taxiandroid.ui.widget.SettingView
-            android:id="@+id/buisnes"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginStart="16dp"
-            android:background="@color/color_div" />
-
-        <ru.taximer.taxiandroid.ui.widget.SettingView
-            android:id="@+id/child"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginStart="16dp"
-            android:background="@color/color_div" />
-
-        <ru.taximer.taxiandroid.ui.widget.SettingView
-            android:id="@+id/miniven"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <TextView
+        <android.support.v7.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#efeff4"
-            android:paddingBottom="16dp"
-            android:paddingLeft="16dp"
-            android:paddingTop="24dp"
-            android:text="Опции"
-            android:textColor="@android:color/black"
-            android:textSize="16sp" />
+            android:orientation="vertical">
 
-        <android.support.v7.widget.SwitchCompat
-            android:id="@+id/card"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:padding="16dp"
-            android:text="Оплата картой" />
+            <ru.taximer.taxiandroid.ui.widget.SettingView
+                android:id="@+id/economy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginStart="16dp"
-            android:background="@color/color_div" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="16dp"
+                android:background="@color/color_div" />
 
-        <android.support.v7.widget.SwitchCompat
-            android:id="@+id/cash"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:padding="16dp"
-            android:text="Оплата наличными" />
+            <ru.taximer.taxiandroid.ui.widget.SettingView
+                android:id="@+id/comfort"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginStart="16dp"
-            android:background="@color/color_div" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="16dp"
+                android:background="@color/color_div" />
 
-    </android.support.v7.widget.LinearLayoutCompat>
-</android.support.v4.widget.NestedScrollView>
+            <ru.taximer.taxiandroid.ui.widget.SettingView
+                android:id="@+id/buisnes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="16dp"
+                android:background="@color/color_div" />
+
+            <ru.taximer.taxiandroid.ui.widget.SettingView
+                android:id="@+id/child"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="16dp"
+                android:background="@color/color_div" />
+
+            <ru.taximer.taxiandroid.ui.widget.SettingView
+                android:id="@+id/miniven"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#efeff4"
+                android:paddingBottom="8dp"
+                android:paddingLeft="16dp"
+                android:paddingTop="16dp"
+                android:text="Опции"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
+
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/card"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:padding="16dp"
+                android:text="Оплата картой" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="16dp"
+                android:background="@color/color_div" />
+
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/cash"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:padding="16dp"
+                android:text="Оплата наличными" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="16dp"
+                android:background="@color/color_div" />
+
+        </android.support.v7.widget.LinearLayoutCompat>
+    </android.support.v4.widget.NestedScrollView>
+</LinearLayout>

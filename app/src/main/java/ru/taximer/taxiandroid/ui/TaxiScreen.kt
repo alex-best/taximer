@@ -2,8 +2,9 @@ package ru.taximer.taxiandroid.ui
 
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.Menu
@@ -16,8 +17,8 @@ import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
 import com.ethanhua.skeleton.Skeleton
 import kotlinx.android.synthetic.main.activity_applications.applications
 import kotlinx.android.synthetic.main.activity_applications.endPlace
-import kotlinx.android.synthetic.main.activity_applications.root_container
 import kotlinx.android.synthetic.main.activity_applications.startPlace
+import kotlinx.android.synthetic.main.activity_applications.toolbar
 import org.jetbrains.anko.intentFor
 import ru.taximer.taxiandroid.R
 import ru.taximer.taxiandroid.network.models.PlaceLocationModel
@@ -30,6 +31,7 @@ import ru.taximer.taxiandroid.presenters.TaxoparkPresenter
 import ru.taximer.taxiandroid.presenters.TaxoparkView
 import ru.taximer.taxiandroid.ui.adapters.OnTaxiHolderListener
 import ru.taximer.taxiandroid.ui.adapters.TaxiAdapter
+
 
 private const val START_PLACE = "start_place"
 private const val END_PLACE = "end_place"
@@ -65,6 +67,7 @@ class TaxiActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_applications)
+        setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         initList()
@@ -135,15 +138,35 @@ class TaxiActivity :
 
     override fun showError(message: String) {
         Log.d("Dto", message)
-        val snackbar = Snackbar.make(root_container, message, Snackbar.LENGTH_LONG)
-
-        snackbar.show()
+        // val snackbar = Snackbar.make(root_container, message, Snackbar.LENGTH_LONG)
+        //snackbar.show()
     }
 
-    override fun onAppSelect(url: String?) {
-        url ?: return
-      //  val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-     //   startActivity(browserIntent)
+    override fun onAppSelect(installUrl: String, openUrl: String, appId: String, taxoparkId: String) {
+        if (appInstalledOrNot(appId)) {
+            if (openUrl.isNotEmpty()) {
+                presenter.openEvent(taxoparkId)
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(openUrl)))
+            }
+        }
+        else {
+            if (installUrl.isNotEmpty()) {
+                presenter.installEvent(taxoparkId)
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(installUrl)))
+            }
+        }
+    }
+
+    private fun appInstalledOrNot(uri: String): Boolean {
+        val pm = packageManager
+        try {
+            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES)
+            return true
+        }
+        catch (e: PackageManager.NameNotFoundException) {
+        }
+
+        return false
     }
 
     companion object {

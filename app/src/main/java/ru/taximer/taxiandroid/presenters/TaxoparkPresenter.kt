@@ -31,6 +31,8 @@ class TaxoparkPresenter : BaseRxPresenter<TaxoparkResultModel, TaxoparkView>() {
 
     val usecases: TaxiUsecases = TaximerApp.appComponent.baseUsecases()
 
+    private var searchHash: String = ""
+
     fun setPoints(start: PlaceLocationModel, end: PlaceLocationModel){
         viewState.showLoading()
         val carType = if(Prefs.getCarClass() == -1) null else Prefs.getCarClass()
@@ -42,10 +44,19 @@ class TaxoparkPresenter : BaseRxPresenter<TaxoparkResultModel, TaxoparkView>() {
 
 
     override fun onNext(t: TaxoparkResultModel) {
+        searchHash = t.request_hash
         viewState.setTaxoparkPack(t.taxoparks.map { it.id }, t.request_hash)
     }
 
     override fun onComplete() {
         viewState?.hideLoading()
+    }
+
+    fun openEvent(taxoparkId: String){
+        usecases.sendOpenEvent(searchHash, taxoparkId)
+    }
+
+    fun installEvent(taxoparkId: String){
+        usecases.sendOpenEvent(searchHash, taxoparkId)
     }
 }
