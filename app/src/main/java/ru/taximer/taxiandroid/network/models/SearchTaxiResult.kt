@@ -11,7 +11,7 @@ data class SearchTaxiModel(
         val taxopark: TaxoparkModel,
         val address_from: String? = null,
         val address_to: String? = null,
-        val install_link: String? = null,
+        val installation_link: String? = null,
         val application_link: String? = null,
         val android_app_id: String? = null,
         var isBest: Boolean = false

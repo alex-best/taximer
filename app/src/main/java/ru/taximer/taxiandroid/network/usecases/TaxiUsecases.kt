@@ -22,10 +22,11 @@ interface TaxiUsecases {
             isChild: Boolean?,
             isCard: Boolean?,
             isCash: Boolean?): Flowable<TaxoparkResultModel>
+
     fun getTaxopark(id: Long, hash: String): Flowable<SearchTaxiModel>
     fun getBestTaxopark(hash: String): Flowable<SearchTaxiModel>
 
-    fun getHistory(isStart:Boolean, point: LatLng): Flowable<List<HistoryModel>>
+    fun getHistory(isStart: Boolean, point: LatLng): Flowable<List<HistoryModel>>
 
     fun sendInstallEvent(hash: String, pxoparkId: String)
     fun sendOpenEvent(hash: String, pxoparkId: String)
@@ -45,9 +46,10 @@ class TaxiUsecasesImpl(
                     point.latitude.toString(),
                     point.longitude.toString()
             ).map {
-                if(it.success) {
-                    if(isStart) it.result!!.to else it.result!!.from
-                }else{
+                if (it.success) {
+                    if (isStart) it.result!!.to else it.result!!.from
+                }
+                else {
                     throw ResponseException(it.errors[0])
                 }
             }.applyDefaultNetSchedulers()
@@ -72,9 +74,10 @@ class TaxiUsecasesImpl(
                     isCard,
                     carType
             ).map {
-                if(it.success) {
+                if (it.success) {
                     it.result!!
-                }else{
+                }
+                else {
                     throw ResponseException(it.errors[0])
                 }
             }.applyDefaultNetSchedulers()
@@ -86,9 +89,10 @@ class TaxiUsecasesImpl(
             endpoints.searchCurrentTaxi(
                     id, hash
             ).map {
-                if(it.success) {
+                if (it.success) {
                     it.result!!.request
-                }else{
+                }
+                else {
                     throw ResponseException(it.errors[0])
                 }
             }.applyDefaultNetSchedulers()
@@ -99,18 +103,19 @@ class TaxiUsecasesImpl(
             endpoints.searchBesttTaxi(
                     hash
             ).map {
-                if(it.success) {
+                if (it.success) {
                     it.result!!.request
-                }else{
+                }
+                else {
                     throw ResponseException(it.errors[0])
                 }
             }.applyDefaultNetSchedulers()
 
     override fun sendInstallEvent(hash: String, pxoparkId: String) {
-        endpoints.sendInstallEvent(hash, pxoparkId).applyDefaultNetSchedulers().subscribe()
+        endpoints.sendInstallEvent(hash, pxoparkId).applyDefaultNetSchedulers().subscribe({}, { it.printStackTrace() })
     }
 
     override fun sendOpenEvent(hash: String, pxoparkId: String) {
-        endpoints.sendOpenEvent(hash, pxoparkId).applyDefaultNetSchedulers().subscribe()
+        endpoints.sendOpenEvent(hash, pxoparkId).applyDefaultNetSchedulers().subscribe({}, { it.printStackTrace() })
     }
 }

@@ -1,6 +1,7 @@
 package ru.taximer.taxiandroid.ui
 
 import android.app.Activity
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -143,18 +144,36 @@ class TaxiActivity :
     }
 
     override fun onAppSelect(installUrl: String, openUrl: String, appId: String, taxoparkId: String) {
+        val intent: Intent? =
         if (appInstalledOrNot(appId)) {
             if (openUrl.isNotEmpty()) {
-                presenter.openEvent(taxoparkId)
-                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(openUrl)))
+                try {
+                    presenter.openEvent(taxoparkId)
+                    Intent(Intent.ACTION_VIEW, Uri.parse(openUrl))
+                }
+                catch (e: ActivityNotFoundException) {
+                    if (installUrl.isNotEmpty()) {
+                        presenter.installEvent(taxoparkId)
+                        Intent(Intent.ACTION_VIEW, Uri.parse(installUrl))
+                    }else{
+                        null
+                    }
+                }
+            }else{
+                null
             }
         }
         else {
             if (installUrl.isNotEmpty()) {
                 presenter.installEvent(taxoparkId)
-                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(installUrl)))
+                Intent(Intent.ACTION_VIEW, Uri.parse(installUrl))
+            }else {
+                null
             }
         }
+        intent ?: return
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(intent)
     }
 
     private fun appInstalledOrNot(uri: String): Boolean {

@@ -64,7 +64,7 @@ class TaxiViewHolder private constructor(root: View) : RecyclerView.ViewHolder(r
     init {
         root.setOnClickListener {
             listener?.onAppSelect(
-                    model?.install_link ?: "",
+                    model?.installation_link ?: "",
                     model?.application_link ?: "",
                     model?.android_app_id ?: "",
                     model?.taxopark?.id?.toString() ?: ""
